@@ -1,6 +1,5 @@
 FROM arm32v7/openjdk:8-jre
 HEALTHCHECK CMD curl --fail http://localhost:8043/ || exit 1
-COPY qemu-arm-static /usr/bin
 
 ARG OMADA_FILENAME=Omada_Controller_v3.0.5_linux_x64
 ARG MONGO_ARM_FILENAME=core_mongodb_3_0_14
@@ -36,10 +35,11 @@ WORKDIR /tmp/$OMADA_FILENAME
 RUN mkdir -p $INSTALL_DIR && \
   for name in bin data properties webapps keystore lib; do cp $name $INSTALL_DIR -r;  done && \
   ln -s /docker-java-home/jre $INSTALL_DIR/jre && \
-  touch $INSTALL_DIR/logs && \
+  mkdir $INSTALL_DIR/logs && \
   rm -rf /tmp/*
 
 EXPOSE 8043
 WORKDIR $INSTALL_DIR
-CMD ["java","-client","-Xms128m","-Xmx1024m","-XX:MaxHeapFreeRatio=60","-XX:MinHeapFreeRatio=30", "-XX:+UseSerialGC", "-XX:+HeapDumpOnOutOfMemoryError","-Deap.home=/opt/tplink/EAPController", "-cp /opt/tplink/EAPController/lib/com.tp-link.eap.start-0.0.1-SHAPSHOT.jar:/opt/tplink/EAPController/lib/*:/opt/tplink/EAPController/external-lib/*", "com.tp_link.eap.start.EapLinuxMain"]
-
+#CMD ["java","-client","-Xms128m","-Xmx1024m","-XX:MaxHeapFreeRatio=60","-XX:MinHeapFreeRatio=30", "-XX:+UseSerialGC", "-XX:+HeapDumpOnOutOfMemoryError","-Deap.home=/opt/tplink/EAPController", "-cp /opt/tplink/EAPController/lib/com.tp-link.eap.start-0.0.1-SHAPSHOT.jar:/opt/tplink/EAPController/lib/*:/opt/tplink/EAPController/external-lib/*", "com.tp_link.eap.start.EapLinuxMain"]
+CMD java -server -Xms128m -Xmx1024m -XX:MaxHeapFreeRatio=60 -XX:MinHeapFreeRatio=30 -XX:+HeapDumpOnOutOfMemoryError -cp /usr/share/java/commons-daemon.jar:/opt/tplink/EAPController/lib/* -Deap.home=/opt/tplink/EAPController com.tp_link.eap.start.EapLinuxMain
+#CMD ["java", "-server", "-Xms128m", "-Xmx1024m", "-XX:MaxHeapFreeRatio=60", "-XX:MinHeapFreeRatio=30", "-XX:+HeapDumpOnOutOfMemoryError", "-cp /usr/share/java/commons-daemon.jar:/opt/tplink/EAPController/lib/*", "-Deap.home=/opt/tplink/EAPController", "com.tp_link.eap.start.EapLinuxMain"]
