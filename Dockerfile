@@ -4,6 +4,8 @@ HEALTHCHECK CMD curl --fail http://localhost:8043/ || exit 1
 ARG OMADA_FILENAME=Omada_Controller_v3.0.5_linux_x64
 ARG MONGO_ARM_FILENAME=core_mongodb_3_0_14
 
+COPY qemu-arm-static /usr/bin
+
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
     curl \
