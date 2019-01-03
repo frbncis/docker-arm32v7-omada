@@ -1,4 +1,9 @@
 FROM arm32v7/openjdk:8-jre
+HEALTHCHECK CMD curl --fail http://localhost:8043/ || exit 1
+COPY qemu-arm-static /usr/bin
+
+ARG OMADA_FILENAME=Omada_Controller_v3.0.5_linux_x64
+ARG MONGO_ARM_FILENAME=core_mongodb_3_0_14
 
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
@@ -16,10 +21,25 @@ RUN echo "deb http://archive.raspbian.org/raspbian jessie main contrib non-free"
   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
-RUN wget https://static.tp-link.com/2018/201811/20181108/Omada_Controller_v3.0.5_linux_x64.tar.gz.zip && \
-  unzip Omada_Controller_v3.0.5_linux_x64.tar.gz.zip && \
-  tar -xvf Omada_Controller_v3.0.5_linux_x64.tar.gz -C ./omada
+RUN wget https://static.tp-link.com/2018/201811/20181108/$OMADA_FILENAME.tar.gz.zip && \
+  unzip $OMADA_FILENAME.tar.gz.zip
 
-WORKDIR /opt/mongo
-RUN wget https://andyfelong.com/downloads/core_mongodb_3_0_14.tar.gz && \
-  tar -xvf core_mongodb_3_0_14.tar.gz /tmp/omada/bin
+RUN tar -xvf $OMADA_FILENAME.tar.gz
+
+RUN wget https://andyfelong.com/downloads/$MONGO_ARM_FILENAME.tar.gz && \
+  tar -xvf $MONGO_ARM_FILENAME.tar.gz && \
+  cp mongod /tmp/$OMADA_FILENAME/bin/
+
+ARG INSTALL_DIR=/opt/tplink/EAPController
+
+WORKDIR /tmp/$OMADA_FILENAME
+RUN mkdir -p $INSTALL_DIR && \
+  for name in bin data properties webapps keystore lib; do cp $name $INSTALL_DIR -r;  done && \
+  ln -s /docker-java-home/jre $INSTALL_DIR/jre && \
+  touch $INSTALL_DIR/logs && \
+  rm -rf /tmp/*
+
+EXPOSE 8043
+WORKDIR $INSTALL_DIR
+CMD ["java","-client","-Xms128m","-Xmx1024m","-XX:MaxHeapFreeRatio=60","-XX:MinHeapFreeRatio=30", "-XX:+UseSerialGC", "-XX:+HeapDumpOnOutOfMemoryError","-Deap.home=/opt/tplink/EAPController", "-cp /opt/tplink/EAPController/lib/com.tp-link.eap.start-0.0.1-SHAPSHOT.jar:/opt/tplink/EAPController/lib/*:/opt/tplink/EAPController/external-lib/*", "com.tp_link.eap.start.EapLinuxMain"]
+
