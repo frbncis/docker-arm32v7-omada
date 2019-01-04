@@ -9,7 +9,7 @@ script:
   echo "Enabling docker client experimental features"
   mkdir -p ~/.docker
   echo '{ "experimental": "enabled" }' > ~/.docker/config.json
-  systemctl restart docker
+  service docker restart
   docker version
 # prepare qemu
 - docker run --rm --privileged multiarch/qemu-user-static:register --reset
