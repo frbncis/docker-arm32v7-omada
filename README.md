@@ -1,4 +1,6 @@
 # Raspberry Pi TP-Link Omada Controller
+[![Build Status](https://travis-ci.org/frbncis/docker-arm32v7-omada.svg?branch=master)](https://travis-ci.org/frbncis/docker-arm32v7-omada)
+
 This repo contains the Dockerfile for running the TP Link Omada Controller as a container on an Raspberry Pi 3
 
 This is currently a WIP. Use at your own risk.
