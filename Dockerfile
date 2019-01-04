@@ -8,10 +8,7 @@ COPY qemu-arm-static /usr/bin
 
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
-    curl \
-    jsvc \
-    net-tools \
-    procps
+    curl
 
 RUN echo "deb http://archive.raspbian.org/raspbian jessie main contrib non-free" | tee "/etc/apt/sources.list.d/raspbian-jessie.list" && \
   wget -O- https://archive.raspbian.org/raspbian.public.key | apt-key add - && \
@@ -38,11 +35,10 @@ RUN mkdir -p $INSTALL_DIR && \
   for name in bin data properties webapps keystore lib; do cp $name $INSTALL_DIR -r;  done && \
   ln -s /docker-java-home/jre $INSTALL_DIR/jre && \
   mkdir $INSTALL_DIR/logs && \
-  rm -rf /tmp/*
+  rm -rf /tmp/* && \
+  rm /usr/bin/qemu-arm-static
 
 EXPOSE 8043/tcp 8088/tcp 27001/udp 27002/tcp 29810/udp 29811/tcp 29812/tcp 29813/tcp
 
 WORKDIR $INSTALL_DIR
-#CMD ["java","-client","-Xms128m","-Xmx1024m","-XX:MaxHeapFreeRatio=60","-XX:MinHeapFreeRatio=30", "-XX:+UseSerialGC", "-XX:+HeapDumpOnOutOfMemoryError","-Deap.home=/opt/tplink/EAPController", "-cp /opt/tplink/EAPController/lib/com.tp-link.eap.start-0.0.1-SHAPSHOT.jar:/opt/tplink/EAPController/lib/*:/opt/tplink/EAPController/external-lib/*", "com.tp_link.eap.start.EapLinuxMain"]
 CMD java -server -Xms128m -Xmx1024m -XX:MaxHeapFreeRatio=60 -XX:MinHeapFreeRatio=30 -XX:+HeapDumpOnOutOfMemoryError -cp /usr/share/java/commons-daemon.jar:/opt/tplink/EAPController/lib/* -Deap.home=/opt/tplink/EAPController com.tp_link.eap.start.EapLinuxMain
-#CMD ["java", "-server", "-Xms128m", "-Xmx1024m", "-XX:MaxHeapFreeRatio=60", "-XX:MinHeapFreeRatio=30", "-XX:+HeapDumpOnOutOfMemoryError", "-cp /usr/share/java/commons-daemon.jar:/opt/tplink/EAPController/lib/*", "-Deap.home=/opt/tplink/EAPController", "com.tp_link.eap.start.EapLinuxMain"]
