@@ -19,3 +19,10 @@ Notes:
 * You can volume mount the `/opt/tplink/EAPcontroller/data` and the `/opt/tplink/EAPcontroller/logs` to the host if you want to persist it.
 * `docker stop` doesn't gracefully shutdown the embedded MongoDB instance.
 * Sometimes it fails trying to startup (especially if you don't have the `--restart=always` flag set). Not sure why, but eventually it will run.
+
+## Building 
+The `build.sh` script will take care of setting up the x86/x64 environment for building an ARM image.
+
+```
+./build.sh . -t frnby/omada-controller-test
+```
