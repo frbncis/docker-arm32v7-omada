@@ -7,4 +7,4 @@ if [ ! -f ./bin/qemu-arm-static ]; then
   docker run --rm --privileged multiarch/qemu-user-static:register --reset
 fi
 
-docker build . $@
+docker build $@
