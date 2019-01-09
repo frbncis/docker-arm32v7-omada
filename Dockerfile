@@ -8,7 +8,6 @@ COPY bin/qemu-arm-static /usr/bin
 
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
-    curl \
     wget
 
 # RUN echo "deb http://archive.raspbian.org/raspbian jessie main contrib non-free" | tee "/etc/apt/sources.list.d/raspbian-jessie.list" && \
@@ -19,8 +18,8 @@ RUN apt-get update && \
 #  rm -rf /var/lib/apt/lists/*
 
 
-RUN wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u10_armhf.deb && \
-  dpkg -i libssl1.0.0_1.0.1t-1+deb8u10_armhf.deb
+RUN wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u10_armel.deb && \
+  dpkg -i libssl1.0.0_1.0.1t-1+deb8u10_armel.deb
 
 WORKDIR /tmp
 RUN wget https://static.tp-link.com/2018/201811/20181108/$OMADA_FILENAME.tar.gz.zip && \
