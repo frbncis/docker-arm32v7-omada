@@ -8,11 +8,11 @@ script:
   curl https://get.docker.com | sh
   echo "Enabling docker client experimental features"
   mkdir -p ~/.docker
-  echo '{ "experimental": "enabled" }' > ~/.docker/config.json
+  echo '{ "experimental": true }' > ~/.docker/config.json
   service docker restart
   docker version
 # build image
-- ./build.sh . -t frnby/omada-controller-test
+- ./build.sh . -t frnby/omada-controller-test --squash
 # push image
 - >
   if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
