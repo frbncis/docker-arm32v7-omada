@@ -19,5 +19,6 @@ script:
     docker push frnby/omada-eap-controller:latest
   elif [ "$TRAVIS_BRANCH" == "develop" && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+    docker tag frnby/omada-controller-test frnby/omada-controller-test:ci
     docker push frnby/omada-eap-controller:ci
   fi
