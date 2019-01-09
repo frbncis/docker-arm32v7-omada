@@ -7,9 +7,8 @@ script:
   echo "Updating Docker to have docker squash command"
   curl https://get.docker.com | sh
   echo "Enabling docker client experimental features"
-  mkdir -p ~/.docker
-  echo '{ "experimental": true }' > /etc/docker/daemon.json
-  service docker restart
+  sudo echo '{ "experimental": true }' > /etc/docker/daemon.json
+  sudo service docker restart
   docker version
 # build image
 - ./build.sh . -t frnby/omada-controller-test --squash
