@@ -8,7 +8,7 @@ script:
   curl https://get.docker.com | sh
   echo "Enabling docker client experimental features"
   mkdir -p ~/.docker
-  echo '{ "experimental": true }' > ~/.docker/config.json
+  echo '{ "experimental": true }' > /etc/docker/daemon.json
   service docker restart
   docker version
 # build image
