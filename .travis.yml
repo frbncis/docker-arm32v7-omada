@@ -7,15 +7,17 @@ script:
   echo "Updating Docker to have docker squash command"
   curl https://get.docker.com | sh
   echo "Enabling docker client experimental features"
-  mkdir -p ~/.docker
-  echo '{ "experimental": "enabled" }' > ~/.docker/config.json
-  service docker restart
+  echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+  sudo service docker restart
   docker version
 # build image
-- ./build.sh . -t frnby/omada-controller-test
+- ./build.sh . -t frnby/omada-controller-test --squash
 # push image
 - >
   if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
-    docker push frnby/omada-eap-controller
+    docker push frnby/omada-eap-controller:latest
+  elif [ "$TRAVIS_BRANCH" == "develop" && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+    docker push frnby/omada-eap-controller:ci
   fi
