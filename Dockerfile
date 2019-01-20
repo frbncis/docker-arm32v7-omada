@@ -1,4 +1,4 @@
-FROM arm32v7/openjdk:8-jre
+FROM arm32v7/openjdk:8-jre-slim
 HEALTHCHECK CMD curl --fail http://127.0.0.1:8088 || exit 1
 
 ARG OMADA_FILENAME=Omada_Controller_v3.0.5_linux_x64
@@ -8,15 +8,18 @@ COPY bin/qemu-arm-static /usr/bin
 
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
-    curl
+    wget
 
-RUN echo "deb http://archive.raspbian.org/raspbian jessie main contrib non-free" | tee "/etc/apt/sources.list.d/raspbian-jessie.list" && \
-  wget -O- https://archive.raspbian.org/raspbian.public.key | apt-key add - && \
-#  apt-key adv --keyserver --no-tty hkp://keyserver.ubuntu.com:80 --recv 9165938D90FDDD2E && \
-  apt-get update && \
-  apt-get install -y --no-install-recommends \
-    libssl1.0.0 && \
-  rm -rf /var/lib/apt/lists/*
+# RUN echo "deb http://archive.raspbian.org/raspbian jessie main contrib non-free" | tee "/etc/apt/sources.list.d/raspbian-jessie.list" && \
+#  wget -O- https://archive.raspbian.org/raspbian.public.key | apt-key add - && \
+#  apt-get update && \
+#  apt-get install -y --no-install-recommends \
+#    libssl1.0.0 && \
+#  rm -rf /var/lib/apt/lists/*
+
+
+RUN wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u10_armel.deb && \
+  dpkg -i libssl1.0.0_1.0.1t-1+deb8u10_armel.deb
 
 WORKDIR /tmp
 RUN wget https://static.tp-link.com/2018/201811/20181108/$OMADA_FILENAME.tar.gz.zip && \
