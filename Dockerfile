@@ -6,22 +6,16 @@ ARG MONGO_ARM_FILENAME=core_mongodb_3_0_14
 
 COPY bin/qemu-arm-static /usr/bin
 
+WORKDIR /tmp
+
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
-    wget
-
-# RUN echo "deb http://archive.raspbian.org/raspbian jessie main contrib non-free" | tee "/etc/apt/sources.list.d/raspbian-jessie.list" && \
-#  wget -O- https://archive.raspbian.org/raspbian.public.key | apt-key add - && \
-#  apt-get update && \
-#  apt-get install -y --no-install-recommends \
-#    libssl1.0.0 && \
-#  rm -rf /var/lib/apt/lists/*
-
+    wget && \
+  rm -rf /var/lib/apt/lists/*
 
 RUN wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u10_armel.deb && \
   dpkg -i libssl1.0.0_1.0.1t-1+deb8u10_armel.deb
 
-WORKDIR /tmp
 RUN wget https://static.tp-link.com/2018/201811/20181108/$OMADA_FILENAME.tar.gz.zip && \
   unzip $OMADA_FILENAME.tar.gz.zip
 
