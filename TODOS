@@ -1,9 +1,0 @@
-Todos:
-======
-
-* Cleanly shutdown the MongoDB process. 
-
-The original installation uses control.sh and jsvc that uses a shutdown hook to cleanly shutdown MongoDB, but the current Docker approach outright kill -9 the java process, so no hooks get invoked.
-
-Idea: Entrypoint script runs the java process and monitors for kill signals. on trapping a kill signal, the script will cleanly shutdown the mongo process using kill -2 or another method outlined here https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/. 
-
