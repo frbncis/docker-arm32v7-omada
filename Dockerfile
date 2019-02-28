@@ -1,4 +1,4 @@
-FROM arm32v7/openjdk:8-jre-slim
+FROM arm32v7/openjdk@sha256:3851dc826fe13a9dfa7561a94dfb5de415a2b8932a17ab16a35f1684591579c0
 HEALTHCHECK CMD curl --fail http://127.0.0.1:8088 || exit 1
 
 ARG OMADA_FILENAME=Omada_Controller_v3.0.5_linux_x64
