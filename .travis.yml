@@ -14,11 +14,14 @@ script:
 - ./build.sh . -t frnby/omada-eap-controller --squash
 # push image
 - >
+  docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+
   if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
     docker push frnby/omada-eap-controller:latest
+  elif [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+    docker tag frnby/omada-eap-controller:latest frnby/omada-eap-controller:$TRAVIS_BRANCH
+    docker push frnby/omada-eap-controller:$TRAVIS_BRANCH
   elif [ "$TRAVIS_BRANCH" == "develop" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
     docker tag frnby/omada-eap-controller:latest frnby/omada-eap-controller:develop
     docker push frnby/omada-eap-controller:develop
   fi
