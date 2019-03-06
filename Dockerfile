@@ -10,7 +10,8 @@ WORKDIR /tmp
 
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
-    wget && \
+    wget \
+    socat && \
   rm -rf /var/lib/apt/lists/*
 
 RUN wget -q http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u10_armhf.deb && \
@@ -21,10 +22,6 @@ RUN wget -q https://static.tp-link.com/2018/201811/20181108/$OMADA_FILENAME.tar.
 
 RUN tar -xvf $OMADA_FILENAME.tar.gz
 
-RUN wget -q https://andyfelong.com/downloads/$MONGO_ARM_FILENAME.tar.gz && \
-  tar -xvf $MONGO_ARM_FILENAME.tar.gz && \
-  cp mongod /tmp/$OMADA_FILENAME/bin/
-
 ARG INSTALL_DIR=/opt/tplink/EAPController
 
 WORKDIR /tmp/$OMADA_FILENAME
@@ -32,8 +29,13 @@ RUN mkdir -p $INSTALL_DIR && \
   for name in bin data properties webapps keystore lib; do cp $name $INSTALL_DIR -r;  done && \
   ln -s /docker-java-home/jre $INSTALL_DIR/jre && \
   mkdir $INSTALL_DIR/logs && \
-  rm -rf /tmp/* && \
-  rm /usr/bin/qemu-arm-static
+  rm -rf /tmp/*
+
+COPY mongod-wrapper.sh $INSTALL_DIR/bin/mongod
+
+RUN chmod +x $INSTALL_DIR/bin/mongod
+
+RUN rm /usr/bin/qemu-arm-static
 
 EXPOSE 8043/tcp 8088/tcp 27001/udp 27002/tcp 29810/udp 29811/tcp 29812/tcp 29813/tcp
 
