@@ -1,4 +1,4 @@
-#!/usr/bin/qemu-arm-static /bin/bash
+#!/bin/bash
 
 # /opt/tplink/EAPController/bin/mongod-real "${@:1:$(($#-1))}"
 
