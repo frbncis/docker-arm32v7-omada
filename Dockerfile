@@ -1,5 +1,5 @@
 FROM arm32v7/openjdk:8-jre-slim
-HEALTHCHECK CMD wget --quiet --tries=1 --spider http://127.0.0.1:8088 || exit 1
+HEALTHCHECK CMD wget --quiet --tries=1 --no-check-certificate http://127.0.0.1:8088 || exit 1
 
 ARG OMADA_FILENAME=Omada_Controller_v3.0.5_linux_x64
 ARG MONGO_ARM_FILENAME=core_mongodb_3_0_14
