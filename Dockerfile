@@ -1,4 +1,4 @@
-FROM arm32v7/openjdk:8-jre-slim
+FROM arm32v7/openjdk:8-jre
 HEALTHCHECK CMD wget --quiet --tries=1 --no-check-certificate http://127.0.0.1:8088 || exit 1
 
 ARG OMADA_FILENAME=Omada_Controller_v3.0.5_linux_x64
@@ -13,8 +13,8 @@ RUN apt-get update && \
     wget && \
   rm -rf /var/lib/apt/lists/*
 
-RUN wget -q http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u10_armhf.deb && \
-  dpkg -i libssl1.0.0_1.0.1t-1+deb8u10_armhf.deb
+RUN wget -q http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u11_armhf.deb && \
+  dpkg -i libssl1.0.0_1.0.1t-1+deb8u11_armhf.deb
 
 RUN wget -q https://static.tp-link.com/2018/201811/20181108/$OMADA_FILENAME.tar.gz.zip && \
   unzip $OMADA_FILENAME.tar.gz.zip
